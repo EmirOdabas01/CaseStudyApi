@@ -12,5 +12,6 @@ namespace CaseStudyApi.BusinessLogic.Dtos.Product
         public int Stock { get; set; }
         public float Weight { get; set; }
         public float PopularityScore { get; set; }
+        public decimal Price { get; set; }
     }
 }

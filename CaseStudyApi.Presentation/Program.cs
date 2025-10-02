@@ -6,14 +6,17 @@ using CaseStudyApi.DataAccess.Interfaces;
 using CaseStudyApi.DataAccess.Repositories;
 using CaseStudyApi.Presentation.MiddleWares;
 using Microsoft.EntityFrameworkCore;
-
+using FluentValidation.AspNetCore;
+using CaseStudyApi.BusinessLogic.Validators.ProductValidator;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CaseStudyDbContext>(options => options.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,6 +33,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 app.UseMiddleware<ExceptionHandlingMiddleWare>();
 

@@ -35,7 +35,7 @@ namespace CaseStudyApi.Presentation.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await _productService.GetAllProductsAsync();
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPut]
@@ -45,11 +45,11 @@ namespace CaseStudyApi.Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var response = await _productService.RemoveProductAsync(id);
-            return Ok();
+            return Ok(response);
         }
     }
 }

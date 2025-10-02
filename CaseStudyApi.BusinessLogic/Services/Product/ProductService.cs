@@ -23,6 +23,15 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
             _productWriteRepository = productWriteRepository;
         }
 
+        private async Task<decimal> GetGoldPrice()
+        {
+            var httpClient = new HttpClient();
+            var goldService = new GoldPriceService(httpClient, "goldapi-1cbgh19mg9id3bo-io");
+
+            var price = await goldService.GetGramPricesAsync();
+
+            return price;
+        }
 
         public async Task<int> AddProductAsync(AddProductVM addProductVM)
         {
@@ -32,19 +41,20 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
                 PopularityScore = addProductVM.PopularityScore,
                 Stock = addProductVM.Stock,
                 Weight = addProductVM.Weight,
-
             });
 
             return await _productWriteRepository.SaveAsync();
         }
         public async Task<List<ProductReadDto>> GetAllProductsAsync()
         {
+            decimal goldPrice = await GetGoldPrice();
             var products =  _productReadRepository.GetAll(false).Select(p => new ProductReadDto
             {
               Name = p.Name,
               Stock = p.Stock,
               PopularityScore = p.PopularityScore,
               Weight = p.Weight,
+              Price = (decimal)(p.PopularityScore + 1) * (decimal)p.Weight * goldPrice,
             }).ToListAsync();
 
             return await products;
@@ -58,7 +68,8 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
                 Name = product.Name,
                 Stock = product.Stock,
                 PopularityScore = product.PopularityScore,
-                Weight = product.PopularityScore
+                Weight = product.PopularityScore,
+                Price = await GetGoldPrice() * (decimal)product.Weight * (decimal)(product.PopularityScore + 1)
             };
         }
 
