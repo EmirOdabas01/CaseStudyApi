@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CaseStudyApi.Domain.Entities
 {
-    public class ProductImage : BaseEntity
+    public class ProductImageFile : BaseEntity
     {
         public string Path { get; set; }
         [NotMapped]

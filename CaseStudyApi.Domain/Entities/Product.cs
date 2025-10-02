@@ -12,6 +12,6 @@ namespace CaseStudyApi.Domain.Entities
         public int Stock { get; set; }
         public float Weight { get; set; }
         public float PopularityScore { get; set; }
-        public ICollection<ProductImage> Images { get; set; }
+        public ICollection<ProductImageFile> Images { get; set; }
     }
 }
