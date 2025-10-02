@@ -1,4 +1,10 @@
+using CaseStudyApi.BusinessLogic.Interfaces.Product;
+using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
+using CaseStudyApi.BusinessLogic.Services.Product;
 using CaseStudyApi.DataAccess;
+using CaseStudyApi.DataAccess.Interfaces;
+using CaseStudyApi.DataAccess.Repositories;
+using CaseStudyApi.Presentation.MiddleWares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +17,12 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<CaseStudyDbContext>(options => options.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IProductReadRepository, ProductReadRepository>();
+builder.Services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+builder.Services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
+builder.Services.AddScoped<IProductImageFileWriteRepository, ProductImageFileWriteRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+//builder.Services.AddScoped<IProductImageFileService, IProductImageFileService>();
 
 var app = builder.Build();
 
@@ -19,6 +31,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+app.UseMiddleware<ExceptionHandlingMiddleWare>();
 
 app.UseHttpsRedirection();
 

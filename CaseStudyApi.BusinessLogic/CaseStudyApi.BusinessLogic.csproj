@@ -10,4 +10,8 @@
     <ProjectReference Include="..\CaseStudyApi.DataAccess\CaseStudyApi.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\ProductImageFile\" />
+  </ItemGroup>
+
 </Project>
