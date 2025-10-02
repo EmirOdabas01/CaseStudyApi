@@ -1,0 +1,6 @@
+@CaseStudyApi.Presentation_HostAddress = http://localhost:5152
+
+GET {{CaseStudyApi.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
