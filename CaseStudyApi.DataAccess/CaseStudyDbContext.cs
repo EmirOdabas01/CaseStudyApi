@@ -1,5 +1,7 @@
 ﻿using CaseStudyApi.Domain.Entities;
 using CaseStudyApi.Domain.Entities.Common;
+using CaseStudyApi.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CaseStudyApi.DataAccess
 {
-    public class CaseStudyDbContext : DbContext
+    public class CaseStudyDbContext : IdentityDbContext<AppUser, AppRole,int>
     {
         public CaseStudyDbContext(DbContextOptions<CaseStudyDbContext> options) : base(options)
         {
