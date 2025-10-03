@@ -15,5 +15,6 @@ namespace CaseStudyApi.BusinessLogic.Interfaces.Product
         Task<int> UpdateProductAsync(UpdateProductVM updateProductVM);
         Task<int> AddProductAsync(AddProductVM addProductVM);
         Task<ProductReadDto?> GetProductByIdAsync(int id);
+        Task<int?> GetProductImageCount(int id);
     }
 }

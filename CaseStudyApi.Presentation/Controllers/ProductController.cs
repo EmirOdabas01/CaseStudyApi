@@ -4,6 +4,9 @@ using CaseStudyApi.BusinessLogic.ViewModels;
 using CaseStudyApi.BusinessLogic.ViewModels.Product;
 using CaseStudyApi.BusinessLogic.Interfaces.Product;
 using System.Net;
+using CaseStudyApi.BusinessLogic.ViewModels.ProductImageFile;
+using CaseStudyApi.Presentation.Interfaces;
+using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
 namespace CaseStudyApi.Presentation.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -11,10 +14,15 @@ namespace CaseStudyApi.Presentation.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
-
-        public ProductController(IProductService productService)
+        private readonly IFileService _fileService;
+        private readonly IProductImageFileService _productImageFileService;
+        public ProductController(IProductService productService, 
+            IFileService fileService, 
+            IProductImageFileService productImageFileService)
         {
             _productService = productService;
+            _fileService = fileService;
+            _productImageFileService = productImageFileService;
         }
 
         [HttpPost]
@@ -50,6 +58,28 @@ namespace CaseStudyApi.Presentation.Controllers
         {
             var response = await _productService.RemoveProductAsync(id);
             return Ok(response);
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Upload([FromRoute] int id)
+        {
+            var namesAndPaths = await _fileService.UploadAsync("resorce-images", Request.Form.Files, id);
+            var response = await _productImageFileService.AddProductImageFilesAsync(namesAndPaths, id);
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetImages([FromRoute] int id)
+        {
+            var productImages = await _productImageFileService.GetAllProductImageFilesAsync(id);
+            return Ok(productImages);
+        }
+
+        [HttpDelete("{id}/{ImageId}")]
+        public async Task<IActionResult> RemoveProductImages([FromRoute] RemoveProductImageFileVM removeProductImageFileVM)
+        {
+            await _productImageFileService.RemoveProductImageFilesAsync(removeProductImageFileVM);
+            return Ok(); 
         }
     }
 }

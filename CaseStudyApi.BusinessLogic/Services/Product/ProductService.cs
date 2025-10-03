@@ -89,5 +89,13 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
 
             return await _productWriteRepository.SaveAsync();
         }
+
+        public async Task<int?> GetProductImageCount(int id)
+        {
+            Domain.Entities.Product? product = await _productReadRepository.Table.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id);
+            int? imageCount = product?.Images.Count;
+
+            return imageCount;
+        }
     }
 }

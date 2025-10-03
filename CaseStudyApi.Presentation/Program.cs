@@ -1,5 +1,4 @@
 using CaseStudyApi.BusinessLogic.Interfaces.Product;
-using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
 using CaseStudyApi.BusinessLogic.Services.Product;
 using CaseStudyApi.DataAccess;
 using CaseStudyApi.DataAccess.Interfaces;
@@ -8,6 +7,11 @@ using CaseStudyApi.Presentation.MiddleWares;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
 using CaseStudyApi.BusinessLogic.Validators.ProductValidator;
+using CaseStudyApi.BusinessLogic.Interfaces;
+using CaseStudyApi.BusinessLogic.Services;
+using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
+using CaseStudyApi.Presentation.Interfaces;
+using CaseStudyApi.Presentation.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,8 +29,8 @@ builder.Services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
 builder.Services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
 builder.Services.AddScoped<IProductImageFileWriteRepository, ProductImageFileWriteRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
-//builder.Services.AddScoped<IProductImageFileService, IProductImageFileService>();
-
+builder.Services.AddScoped<IProductImageFileService, ProductImageFileService>();
+builder.Services.AddScoped<IFileService, FileService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

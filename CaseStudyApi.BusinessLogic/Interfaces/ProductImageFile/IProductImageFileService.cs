@@ -12,10 +12,8 @@ namespace CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile
 {
     public interface IProductImageFileService
     {
-        Task<List<ProductImageFileReadDto>> GetAllProductImageFilesAsync();
-        Task RemoveProductImageFilesAsync(List<int> ids);
-        Task UpdateProductImageFilesAsync(List<UpdateProductImageFilesVM> updateProductImageFilesVM);
-        Task AddProductImageFilesAsync(List<AddProductImageFilesVM> addProductImageFilesVM);
-        Task<ProductImageFileReadDto?> GetProductImageFileByIdAsync(int id);
+        Task<List<ProductImageFileReadDto>?> GetAllProductImageFilesAsync(int id);
+        Task RemoveProductImageFilesAsync(RemoveProductImageFileVM removeProductImageFileVM);
+        Task<int> AddProductImageFilesAsync(List<(string fileName, string path)> files, int id);
     }
 }

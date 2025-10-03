@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CaseStudyApi.BusinessLogic.ViewModels.ProductImageFile
 {
-    public class AddProductImageFilesVM
+    public class RemoveProductImageFileVM
     {
-        public string Name { get; set; }
-        public string Path { get; set; }
+        public int Id { get; set; }
+        public int ImageId { get; set; }
     }
 }
