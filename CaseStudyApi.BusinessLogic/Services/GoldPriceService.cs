@@ -36,7 +36,7 @@ namespace CaseStudyApi.BusinessLogic.Services
 
             JObject data = JObject.Parse(json);
             decimal price;
-            if (decimal.TryParse(data["price_gram_22k"]?.ToString(), out price))
+            if (decimal.TryParse(data["price_gram_24k"]?.ToString(), out price))
                 return price;
             else
                 throw new Exception("gold price is null");

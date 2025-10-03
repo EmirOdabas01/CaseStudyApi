@@ -1,20 +1,23 @@
+using CaseStudyApi.BusinessLogic.Interfaces;
 using CaseStudyApi.BusinessLogic.Interfaces.Product;
+using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
+using CaseStudyApi.BusinessLogic.Services;
 using CaseStudyApi.BusinessLogic.Services.Product;
+using CaseStudyApi.BusinessLogic.Services.User;
+using CaseStudyApi.BusinessLogic.Validators.ProductValidator;
 using CaseStudyApi.DataAccess;
 using CaseStudyApi.DataAccess.Interfaces;
-using CaseStudyApi.DataAccess.Repositories;
-using CaseStudyApi.Presentation.MiddleWares;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation.AspNetCore;
-using CaseStudyApi.BusinessLogic.Validators.ProductValidator;
-using CaseStudyApi.BusinessLogic.Interfaces;
-using CaseStudyApi.BusinessLogic.Services;
-using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
-using CaseStudyApi.Presentation.Interfaces;
-using CaseStudyApi.Presentation.Services;
-using CaseStudyApi.Domain.Entities.Identity;
 using CaseStudyApi.DataAccess.Interfaces.User;
-using CaseStudyApi.BusinessLogic.Services.User;
+using CaseStudyApi.DataAccess.Repositories;
+using CaseStudyApi.Domain.Entities.Identity;
+using CaseStudyApi.Presentation.Interfaces;
+using CaseStudyApi.Presentation.MiddleWares;
+using CaseStudyApi.Presentation.Services;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -36,6 +39,22 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductImageFileService, ProductImageFileService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenHandler, CaseStudyApi.BusinessLogic.Services.TokenHandler>(); 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Admin", options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true, 
+            ValidateLifetime = true, 
+            ValidateIssuerSigningKey = true, 
+
+            ValidAudience = builder.Configuration["Token:Audience"],
+            ValidIssuer = builder.Configuration["Token:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+        };
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +68,7 @@ app.UseMiddleware<ExceptionHandlingMiddleWare>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

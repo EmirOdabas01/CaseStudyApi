@@ -11,5 +11,6 @@ namespace CaseStudyApi.DataAccess.Interfaces.User
     public interface IUserService
     {
         Task<CreateUserResponse> CreateUser(CreateUserVM createUserVM);
+        Task<LoginResponse> LoginUser(LoginUserVM loginUserVM);
     }
 }

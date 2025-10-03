@@ -8,6 +8,7 @@ namespace CaseStudyApi.BusinessLogic.Dtos.Product
 {
     public class ProductReadDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Stock { get; set; }
         public float Weight { get; set; }

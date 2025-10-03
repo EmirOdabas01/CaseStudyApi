@@ -50,6 +50,7 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
             decimal goldPrice = await GetGoldPrice();
             var products =  _productReadRepository.GetAll(false).Select(p => new ProductReadDto
             {
+              Id = p.Id,
               Name = p.Name,
               Stock = p.Stock,
               PopularityScore = p.PopularityScore,
@@ -65,6 +66,7 @@ namespace CaseStudyApi.BusinessLogic.Services.Product
             var product = await _productReadRepository.GetByIdAsync(id, false);
             return new()
             {
+                Id = product.Id,
                 Name = product.Name,
                 Stock = product.Stock,
                 PopularityScore = product.PopularityScore,

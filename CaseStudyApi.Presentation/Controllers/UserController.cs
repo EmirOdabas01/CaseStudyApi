@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CaseStudyApi.Presentation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,6 +20,13 @@ namespace CaseStudyApi.Presentation.Controllers
         public async Task<IActionResult> CreateUser(CreateUserVM createUserVM)
         {
             var response = await _userService.CreateUser(createUserVM);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginUserVM loginUserVM)
+        {
+           var response = await _userService.LoginUser(loginUserVM);
             return Ok(response);
         }
     }

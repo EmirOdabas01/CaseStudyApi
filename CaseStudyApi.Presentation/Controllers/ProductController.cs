@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using CaseStudyApi.BusinessLogic.Interfaces.Product;
+using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
 using CaseStudyApi.BusinessLogic.ViewModels;
 using CaseStudyApi.BusinessLogic.ViewModels.Product;
-using CaseStudyApi.BusinessLogic.Interfaces.Product;
-using System.Net;
 using CaseStudyApi.BusinessLogic.ViewModels.ProductImageFile;
 using CaseStudyApi.Presentation.Interfaces;
-using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 namespace CaseStudyApi.Presentation.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -33,7 +35,7 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get(int id)
         {
             var response = await _productService.GetProductByIdAsync(id);
             return Ok(response);
