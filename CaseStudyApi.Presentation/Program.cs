@@ -1,7 +1,9 @@
 using CaseStudyApi.BusinessLogic.Interfaces;
+using CaseStudyApi.BusinessLogic.Interfaces.Authentication;
 using CaseStudyApi.BusinessLogic.Interfaces.Product;
 using CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile;
 using CaseStudyApi.BusinessLogic.Services;
+using CaseStudyApi.BusinessLogic.Services.Authentication;
 using CaseStudyApi.BusinessLogic.Services.Product;
 using CaseStudyApi.BusinessLogic.Services.User;
 using CaseStudyApi.BusinessLogic.Validators.ProductValidator;
@@ -39,20 +41,22 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductImageFileService, ProductImageFileService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITokenHandler, CaseStudyApi.BusinessLogic.Services.TokenHandler>(); 
+builder.Services.AddScoped<ITokenHandler, CaseStudyApi.BusinessLogic.Services.TokenHandler>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Admin", options =>
     {
         options.TokenValidationParameters = new()
         {
             ValidateAudience = true,
-            ValidateIssuer = true, 
-            ValidateLifetime = true, 
-            ValidateIssuerSigningKey = true, 
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
             ValidAudience = builder.Configuration["Token:Audience"],
             ValidIssuer = builder.Configuration["Token:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
+            LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false
         };
     });
 var app = builder.Build();

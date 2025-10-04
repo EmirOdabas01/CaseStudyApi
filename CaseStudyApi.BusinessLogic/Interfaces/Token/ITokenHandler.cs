@@ -10,5 +10,6 @@ namespace CaseStudyApi.BusinessLogic.Interfaces
     public interface ITokenHandler
     {
         Token CreateAccessToken(int minute);
+        string CreateRefreshToken();
     }
 }

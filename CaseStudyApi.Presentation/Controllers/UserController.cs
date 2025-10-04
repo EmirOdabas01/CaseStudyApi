@@ -23,11 +23,6 @@ namespace CaseStudyApi.Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginUserVM loginUserVM)
-        {
-           var response = await _userService.LoginUser(loginUserVM);
-            return Ok(response);
-        }
+     
     }
 }

@@ -43,28 +43,16 @@ namespace CaseStudyApi.BusinessLogic.Services.User
             return response;
         }
 
-        public async Task<LoginResponse> LoginUser(LoginUserVM loginUserVM)
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
         {
-            Domain.Entities.Identity.AppUser user = await _userManager.FindByNameAsync(loginUserVM.UsernameOrEmail);
-            if (user == null)
-                user = await _userManager.FindByEmailAsync(loginUserVM.UsernameOrEmail);
-
-            if (user == null)
-                throw new Exception("User Not Found");
-
-            SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, loginUserVM.Password, false);
-            if (result.Succeeded) 
+            if (user != null)
             {
-                Token token = _tokenHandler.CreateAccessToken(5);
-                return new LoginSuccessResponse()
-                {
-                    Token = token
-                };
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = accessTokenDate.AddSeconds(addOnAccessTokenDate);
+                await _userManager.UpdateAsync(user);
             }
-            return new LoginErrorResponse()
-            {
-                Message = "Wrong Name Or eMail"
-            };
+            else
+                throw new Exception("User not found");
         }
     }
 }
