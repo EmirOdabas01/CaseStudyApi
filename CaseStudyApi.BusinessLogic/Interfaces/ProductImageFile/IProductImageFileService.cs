@@ -15,5 +15,6 @@ namespace CaseStudyApi.BusinessLogic.Interfaces.ProductImageFile
         Task<List<ProductImageFileReadDto>?> GetAllProductImageFilesAsync(int id);
         Task RemoveProductImageFilesAsync(RemoveProductImageFileVM removeProductImageFileVM);
         Task<int> AddProductImageFilesAsync(List<(string fileName, string path)> files, int id);
+        Task SetColorsAndShowCase(SetColorsAndShowCaseVM colorsAndShowCaseVM);
     }
 }

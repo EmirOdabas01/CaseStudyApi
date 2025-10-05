@@ -21,6 +21,7 @@ namespace CaseStudyApi.BusinessLogic.Services
 
         public async Task<Decimal> GetGramPricesAsync()
         {
+            return 3.4M;
             string url = "https://www.goldapi.io/api/XAU/USD";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -31,7 +32,7 @@ namespace CaseStudyApi.BusinessLogic.Services
 
             var response = await _httpClient.SendAsync(request);
 
-            response.EnsureSuccessStatusCode();
+           
             var json = await response.Content.ReadAsStringAsync();
 
             JObject data = JObject.Parse(json);

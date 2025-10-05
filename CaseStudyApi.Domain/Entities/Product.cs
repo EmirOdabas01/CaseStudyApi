@@ -1,4 +1,5 @@
 ﻿using CaseStudyApi.Domain.Entities.Common;
+using CaseStudyApi.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -12,7 +12,7 @@ namespace CaseStudyApi.Presentation.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Admin")]
+   
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -28,7 +28,8 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crate([FromBody] AddProductVM addProductVM)
+        [Authorize(AuthenticationSchemes = "Admin")]
+        public async Task<IActionResult> Create([FromBody] AddProductVM addProductVM)
         {
             var response = await _productService.AddProductAsync(addProductVM);
             return Ok();
@@ -49,6 +50,7 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = "Admin")]
         public async Task<IActionResult> Put([FromBody] UpdateProductVM updateProductVM)
         {
             var response = await _productService.UpdateProductAsync(updateProductVM);
@@ -56,6 +58,7 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var response = await _productService.RemoveProductAsync(id);
@@ -63,6 +66,7 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpPost("{id}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
         public async Task<IActionResult> Upload([FromRoute] int id)
         {
             var namesAndPaths = await _fileService.UploadAsync("resorce-images", Request.Form.Files, id);
@@ -78,10 +82,19 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpDelete("{id}/{ImageId}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
         public async Task<IActionResult> RemoveProductImages([FromRoute] RemoveProductImageFileVM removeProductImageFileVM)
         {
             await _productImageFileService.RemoveProductImageFilesAsync(removeProductImageFileVM);
             return Ok(); 
+        }
+
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        public async Task<IActionResult> UpdateShowcaseAndColor([FromBody] SetColorsAndShowCaseVM setColorsAndShowCaseVM)
+        {
+            await _productImageFileService.SetColorsAndShowCase(setColorsAndShowCaseVM);
+            return Ok();
         }
     }
 }

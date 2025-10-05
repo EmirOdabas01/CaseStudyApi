@@ -10,6 +10,8 @@ namespace CaseStudyApi.BusinessLogic.Dtos.ProductImageFile
     {
         public string Name { get; set; }
         public string Path { get; set; }
+        public string Color { get; set; }
+        public bool IsShowCase { get; set; }
         public int Id { get; set; }
     }
 }

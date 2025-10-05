@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CaseStudyApi.DataAccess.Migrations
 {
     [DbContext(typeof(CaseStudyDbContext))]
-    [Migration("20251003154724_mig_1")]
-    partial class mig_1
+    [Migration("20251004162041_mig_2")]
+    partial class mig_2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,10 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("NameSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -98,6 +102,12 @@ namespace CaseStudyApi.DataAccess.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenEndDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -153,6 +163,95 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductColor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductColors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Color = "Yellow"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Color = "Yellow Orange"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Color = "Orange"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Color = "Red Orange"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Color = "Red"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Color = "Red Violet"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Color = "Violet"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Color = "Blue Violet"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Color = "Blue"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Color = "Blue Green"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Color = "Green"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Color = "Yellow Green"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Color = "Black"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Color = "White"
+                        });
+                });
+
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductImageFile", b =>
                 {
                     b.Property<int>("Id")
@@ -164,6 +263,9 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsShowCaseImage")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -172,10 +274,15 @@ namespace CaseStudyApi.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("ProductColorId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductColorId");
 
                     b.HasIndex("ProductId");
 
@@ -287,6 +394,10 @@ namespace CaseStudyApi.DataAccess.Migrations
 
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductImageFile", b =>
                 {
+                    b.HasOne("CaseStudyApi.Domain.Entities.ProductColor", "ProductColor")
+                        .WithMany("ProductImageFiles")
+                        .HasForeignKey("ProductColorId");
+
                     b.HasOne("CaseStudyApi.Domain.Entities.Product", "Product")
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
@@ -294,6 +405,8 @@ namespace CaseStudyApi.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductColor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -350,6 +463,11 @@ namespace CaseStudyApi.DataAccess.Migrations
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductColor", b =>
+                {
+                    b.Navigation("ProductImageFiles");
                 });
 #pragma warning restore 612, 618
         }

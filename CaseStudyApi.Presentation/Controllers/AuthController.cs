@@ -1,4 +1,5 @@
 ﻿using CaseStudyApi.BusinessLogic.Interfaces.Authentication;
+using CaseStudyApi.BusinessLogic.ViewModels.Auth;
 using CaseStudyApi.BusinessLogic.ViewModels.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,9 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string usernameOrEmail, string password)
+        public async Task<IActionResult> Login([FromBody] LoginVM loginVM)
         {
-            var response = await _authenticationService.LoginAsync(usernameOrEmail, password, 15);
+            var response = await _authenticationService.LoginAsync(loginVM.UserNameOrEmail, loginVM.Password, 15);
             return Ok(response);
         }
     }

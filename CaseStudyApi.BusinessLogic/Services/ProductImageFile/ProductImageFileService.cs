@@ -8,6 +8,7 @@ using CaseStudyApi.DataAccess.Repositories;
 using CaseStudyApi.Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -45,7 +46,8 @@ namespace CaseStudyApi.BusinessLogic.Services
             {
                 Name = f.fileName,
                 Path = f.path,
-                ProductId = id
+                ProductId = id,
+                IsShowCaseImage = false
             }));
 
             await _productImageFileWriteRepository.AddRangeAsync(productImageFiles);
@@ -54,12 +56,14 @@ namespace CaseStudyApi.BusinessLogic.Services
 
         public async Task<List<ProductImageFileReadDto>?> GetAllProductImageFilesAsync(int id)
         {
-            var product = await _productReadRepository.Table.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _productReadRepository.Table.Include(p => p.Images).ThenInclude(p => p.ProductColor).FirstOrDefaultAsync(p => p.Id == id);
             return product?.Images.Select(p => new ProductImageFileReadDto
             {
                 Id = p.Id,
                 Name = p.Name,
-                Path = $"{configuration["BaseStorageUrl"]}/{p.Path}"
+                Path = $"{configuration["BaseStorageUrl"]}/{p.Path}",
+                IsShowCase = p.IsShowCaseImage,
+                Color = p.ProductColor?.Color ?? "" 
             }).ToList();
         }
 
@@ -73,6 +77,15 @@ namespace CaseStudyApi.BusinessLogic.Services
                 product?.Images.Remove(productImageFile);
 
             await _productWriteRepository.SaveAsync();
+        }
+
+        public async Task SetColorsAndShowCase([FromBody] SetColorsAndShowCaseVM colorsAndShowCaseVM)
+        {
+            var image = await _productImageFileReadRepository.GetByIdAsync(colorsAndShowCaseVM.Id);
+            image.ProductColorId = colorsAndShowCaseVM.ColorId;
+            image.IsShowCaseImage = colorsAndShowCaseVM.IsShowCase;
+
+            await _productImageFileWriteRepository.SaveAsync();
         }
     }
 }

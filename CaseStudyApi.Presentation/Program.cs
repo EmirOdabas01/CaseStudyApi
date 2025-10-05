@@ -29,7 +29,9 @@ builder.Services.AddControllers().AddFluentValidation(options => options.Registe
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+    policy.WithOrigins("http://localhost:3000", "https://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+));
 builder.Services.AddDbContext<CaseStudyDbContext>(options => options.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<CaseStudyDbContext>();
@@ -60,8 +62,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 var app = builder.Build();
-
+app.UseCors();
 // Configure the HTTP request pipeline.
+app.UseStaticFiles();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

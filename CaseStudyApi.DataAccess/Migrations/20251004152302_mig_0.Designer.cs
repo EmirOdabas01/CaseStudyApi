@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CaseStudyApi.DataAccess.Migrations
 {
     [DbContext(typeof(CaseStudyDbContext))]
-    [Migration("20251003161423_mig_2")]
-    partial class mig_2
+    [Migration("20251004152302_mig_0")]
+    partial class mig_0
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,6 +103,12 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenEndDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -157,6 +163,23 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductColor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductColors");
+                });
+
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductImageFile", b =>
                 {
                     b.Property<int>("Id")
@@ -168,6 +191,9 @@ namespace CaseStudyApi.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsShowCaseImage")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -176,10 +202,15 @@ namespace CaseStudyApi.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ProductColorId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductColorId");
 
                     b.HasIndex("ProductId");
 
@@ -291,6 +322,12 @@ namespace CaseStudyApi.DataAccess.Migrations
 
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductImageFile", b =>
                 {
+                    b.HasOne("CaseStudyApi.Domain.Entities.ProductColor", "ProductColor")
+                        .WithMany("ProductImageFiles")
+                        .HasForeignKey("ProductColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CaseStudyApi.Domain.Entities.Product", "Product")
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
@@ -298,6 +335,8 @@ namespace CaseStudyApi.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductColor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -354,6 +393,11 @@ namespace CaseStudyApi.DataAccess.Migrations
             modelBuilder.Entity("CaseStudyApi.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("CaseStudyApi.Domain.Entities.ProductColor", b =>
+                {
+                    b.Navigation("ProductImageFiles");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,5 +15,9 @@ namespace CaseStudyApi.Domain.Entities
         public override DateTime UpdatedDate { get => base.UpdatedDate; set => base.UpdatedDate = value; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+        public bool IsShowCaseImage { get; set; }
+        public int? ProductColorId { get; set; }
+        public ProductColor ProductColor { get; set; }
+       
     }
 }

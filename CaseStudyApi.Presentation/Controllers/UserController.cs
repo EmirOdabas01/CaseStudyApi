@@ -17,7 +17,7 @@ namespace CaseStudyApi.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserVM createUserVM)
+        public async Task<IActionResult> CreateUser([FromBody]CreateUserVM createUserVM)
         {
             var response = await _userService.CreateUser(createUserVM);
             return Ok(response);
